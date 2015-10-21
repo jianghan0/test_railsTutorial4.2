@@ -54,15 +54,28 @@ class UserTest < ActiveSupport::TestCase
   	assert_not duplicate_user.valid?
   end
 
+  #emailが小文字で保存されるか
+  test "email addresses should be saved as lower-case" do
+  	mixied_case_email = "Foo@EXAMPLE.COM"
+  	@user.email = mixied_case_email
+  	@user.save
+  	assert_equal mixied_case_email.downcase, @user.reload.email
+  end
+
   #passwordが空の場合: not valid
   test "password should be present(nonblank)" do
   	@user.password = @user.password_confirmation = " " * 6
   	assert_not @user.valid?
   end
 
-  #
+  #passwordのmin制限検証
   test "password should have a minimum length" do
   	@user.password = @user.password_confirmation = "a" * 5
   	assert_not @user.valid?
   end
+
+
+
+
+
 end
